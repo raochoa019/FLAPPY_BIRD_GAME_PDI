@@ -7,12 +7,12 @@ mp_face_mesh = mp.solutions.face_mesh
 drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
 pygame.init()
 
-# Levantamiento de entorno virtual
+# Initialize required elements/environment
 VID_CAP = cv.VideoCapture(0)
-window_size = (VID_CAP.get(cv.CAP_PROP_FRAME_WIDTH), VID_CAP.get(cv.CAP_PROP_FRAME_HEIGHT)) # ancho y alto ventana
+window_size = (VID_CAP.get(cv.CAP_PROP_FRAME_WIDTH), VID_CAP.get(cv.CAP_PROP_FRAME_HEIGHT)) # width by height
 screen = pygame.display.set_mode(window_size)
 
-# Posicionamiento de objetos Bird and pipe init
+# Bird and pipe init
 bird_img = pygame.image.load("bird_sprite.png")
 bird_img = pygame.transform.scale(bird_img, (bird_img.get_width() / 6, bird_img.get_height() / 6))
 bird_frame = bird_img.get_rect()
@@ -34,7 +34,6 @@ level = 0
 score = 0
 idUpdateScore = False
 game_is_running = True
-
 
 with mp_face_mesh.FaceMesh(
         max_num_faces=1,
@@ -74,8 +73,8 @@ with mp_face_mesh.FaceMesh(
 
         # Face mesh
         frame.flags.writeable = False
-        frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-        results = face_mesh.process(frame) #Generacion mascara
+        frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB) #OpenCV
+        results = face_mesh.process(frame) #MediaPipe
         frame.flags.writeable = True
 
         # Draw mesh
@@ -98,8 +97,9 @@ with mp_face_mesh.FaceMesh(
             pipe_frames.popleft()
 
         # Update screen
+        pygame.display.set_caption('Flappy Bird: Proyecto PDI - Beltrán, Ochoa')
         pygame.surfarray.blit_array(screen, frame)
-        screen.blit(bird_img, bird_frame)
+        screen.blit(bird_img, bird_frame) #Colocar Bird en la ventana
         checker = True
         for pf in pipe_frames:
             # Check if bird went through to update score
@@ -117,11 +117,11 @@ with mp_face_mesh.FaceMesh(
         text = pygame.font.SysFont("Helvetica Bold.ttf", 50).render(f'Stage {stage}', True, (99, 245, 255))
         tr = text.get_rect()
         tr.center = (100, 50)
-        screen.blit(text, tr)
+        #screen.blit(text, tr) //Mostrar Escena
         text = pygame.font.SysFont("Helvetica Bold.ttf", 50).render(f'Score: {score}', True, (99, 245, 255))
         tr = text.get_rect()
         tr.center = (100, 100)
-        screen.blit(text, tr)
+        #screen.blit(text, tr) //Mostrar Puntaje
 
         # Update screen
         pygame.display.flip()
