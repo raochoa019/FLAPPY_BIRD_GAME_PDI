@@ -7,12 +7,12 @@ mp_face_mesh = mp.solutions.face_mesh
 drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
 pygame.init()
 
-# Initialize required elements/environment
+# Levantamiento de entorno virtual
 VID_CAP = cv.VideoCapture(0)
-window_size = (VID_CAP.get(cv.CAP_PROP_FRAME_WIDTH), VID_CAP.get(cv.CAP_PROP_FRAME_HEIGHT)) # width by height
+window_size = (VID_CAP.get(cv.CAP_PROP_FRAME_WIDTH), VID_CAP.get(cv.CAP_PROP_FRAME_HEIGHT)) # ancho y alto ventana
 screen = pygame.display.set_mode(window_size)
 
-# Bird and pipe init
+# Posicionamiento de objetos Bird and pipe init
 bird_img = pygame.image.load("bird_sprite.png")
 bird_img = pygame.transform.scale(bird_img, (bird_img.get_width() / 6, bird_img.get_height() / 6))
 bird_frame = bird_img.get_rect()
@@ -34,6 +34,7 @@ level = 0
 score = 0
 idUpdateScore = False
 game_is_running = True
+
 
 with mp_face_mesh.FaceMesh(
         max_num_faces=1,
@@ -74,7 +75,7 @@ with mp_face_mesh.FaceMesh(
         # Face mesh
         frame.flags.writeable = False
         frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-        results = face_mesh.process(frame)
+        results = face_mesh.process(frame) #Generacion mascara
         frame.flags.writeable = True
 
         # Draw mesh
