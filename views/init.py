@@ -1,15 +1,10 @@
 import pygame
-from pygame.locals import *
-
-import sys
 from components.Button import Button
 
 class InitView():
-    def __init__(self, window_size):
-        pygame.display.set_caption('Flappy Bird: Proyecto PDI - Beltrán, Ochoa')
-        self.window_size = window_size
-        self.screen = pygame.display.set_mode(self.window_size)
-        self.running = False
+    def __init__(self, screen):
+        self.screen = screen
+        self.__timer = 0
 
         # Buttons/Rectangles
         self.__btnJugar = None
@@ -20,25 +15,14 @@ class InitView():
         # Images
         self.__imgLogo = None
         self.__imgBird = None
+        self.__birdIsDown = False
+        self.__birdY = 190
 
         self.__initializeComponents()
 
     def show(self):
-        self.running = True
-        while self.running:
-            self.loop()
-
-    def loop(self):
-        self.eventLoop()
         self.draw()
         pygame.display.update()
-
-    def eventLoop(self):
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                self.running = False
-                pygame.quit()
-                sys.exit()
 
     def draw(self):
         # Fill the background with cian
@@ -52,8 +36,20 @@ class InitView():
         self.__btnDevelopers.draw(self.screen)
 
         # Place images
+        self.__birdY = 170 if self.__birdIsDown else 190
         self.screen.blit(self.__imgLogo, self.__imgLogo.get_rect(center=(CENTER_WIDTH, 80)))
-        self.screen.blit(self.__imgBird, self.__imgBird.get_rect(center=(CENTER_WIDTH, 160)))
+        self.screen.blit(self.__imgBird, self.__imgBird.get_rect(center=(CENTER_WIDTH, self.__birdY)))
+        self.__animateBird()
+
+    def __animateBird(self):
+        if self.__timer == 200:
+            self.__timer = 0
+            if self.__birdIsDown:
+                self.__birdIsDown = False
+            else:
+                self.__birdIsDown = True
+
+        self.__timer += 1
 
     # Button's functions
     def __pressPlayButton(self):
