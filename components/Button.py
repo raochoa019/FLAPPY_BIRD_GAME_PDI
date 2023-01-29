@@ -10,22 +10,25 @@ class Button():
         self.text = text
         self.sizeText = sizeText
         self.onClickFunction = onClickFunction
+        self.clicked = False
 
-
-    def draw(self, win, outline=None):
-        # Call this method to draw the button on the screen
-        if outline:
-            pygame.draw.rect(win, outline, (self.x - 2, self.y - 2, self.width + 4, self.height + 4), 0)
-
-        pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.height), 0, 10)
-        pygame.draw.rect(win, (0, 0, 0), (self.x, self.y, self.width, self.height), 2, 10)
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height), 0, 10)
+        pygame.draw.rect(screen, (0, 0, 0), (self.x, self.y, self.width, self.height), 2, 10)
 
         if self.text != '':
             font = pygame.font.Font('./resources/ARCADE_N.ttf', self.sizeText)
-            #font = pygame.font.SysFont('Arial', 60)
             text = font.render(self.text, 1, (0, 0, 0))
-            win.blit(text, (self.x + (self.width / 2 - text.get_width() / 2), self.y + (self.height / 2 - text.get_height() / 2)))
+            screen.blit(text, (
+                self.x + (self.width / 2 - text.get_width() / 2), self.y + (self.height / 2 - text.get_height() / 2)))
 
+        pos = pygame.mouse.get_pos()
+        if self.isOver(pos):
+            if pygame.mouse.get_pressed()[0] and not self.clicked:
+                self.clicked = True
+                self.onClickFunction()
+            if not pygame.mouse.get_pressed()[0]:
+                self.clicked = False
 
     def isOver(self, pos):
         # Pos is the mouse position or a tuple of (x,y) coordinates
