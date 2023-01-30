@@ -1,6 +1,7 @@
 import sys, time, random, pygame
 from collections import deque
 import cv2 as cv, mediapipe as mp
+from components.Text import Text
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_face_mesh = mp.solutions.face_mesh
@@ -37,7 +38,7 @@ pipe_top.x = 500
 pipe_top.y = pipe_bottom.y - pipe_bottom.height - 100    
 
 speed = 5
-score = 1
+score = 0
 
 game_is_running = True
 
@@ -107,6 +108,13 @@ with mp_face_mesh.FaceMesh(
         screen.blit(pipe_img, pipe_top) #Colocar Bird en la ventana        
         screen.blit(pipe_img_rotate, pipe_bottom) #Colocar Bird en la ventana
         
+        txt_score = Text((255,255,255), 100, 30,text="Puntaje " + str(score))
+        txt_score.draw(screen)
+
+        if score == 5:
+            speed += 1
+
+
         if pipe_top.x == 10:
             pipe_bottom.x = 500
             pipe_top.x = 500
