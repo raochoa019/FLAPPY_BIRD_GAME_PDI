@@ -1,5 +1,6 @@
 import pygame
 from components.Button import Button
+from views.credits import CreditsView
 
 class InitView():
     def __init__(self, screen):
@@ -15,6 +16,7 @@ class InitView():
         # Images
         self.__imgLogo = None
         self.__imgBird = None
+        self.__imgBackground = None
         self.__birdIsDown = False
         self.__birdY = 190
 
@@ -22,11 +24,12 @@ class InitView():
 
     def show(self):
         self.draw()
-        pygame.display.update()
+        #pygame.display.update()
 
     def draw(self):
         # Fill the background with cian
         self.screen.fill((0, 199, 218))
+        self.screen.blit(self.__imgBackground, (0,0))
         CENTER_WIDTH, CENTER_HEIGHT = self.screen.get_rect().center
 
         # Place buttons
@@ -52,11 +55,13 @@ class InitView():
         self.__timer += 1
 
     # Button's functions
-    def __pressPlayButton(self):
-        print("Jugar")
+    def __btnJugar_Click(self):
+        return None
 
-    def __pressCreditsButton(self):
-        print("Creditos")
+    def __btnCreditos_Click(self):
+        with open("config.txt", 'w') as f:
+            f.write('1')
+        f.close()
 
     # Initialize interface's components
     def __initializeComponents(self):
@@ -64,9 +69,9 @@ class InitView():
 
         # Initialize Buttons/Rectangles
         self.__btnJugar = Button((118, 191, 20), 250, CENTER_HEIGHT, 150, 50, text="Jugar",
-                                 onClickFunction=self.__pressPlayButton)
+                                 onClickFunction=self.__btnJugar_Click)
         self.__btnCreditos = Button((118, 191, 20), 230, CENTER_HEIGHT + 80, 180, 50, text="Creditos",
-                                    onClickFunction=self.__pressCreditsButton)
+                                    onClickFunction=self.__btnCreditos_Click)
         self.__btnDIP = Button((255, 255, 255), 30, 435, 240, 30, text="DIP 2022-PAO2", sizeText=15)
         self.__btnDevelopers = Button((255, 255, 255), 340, 435, 270, 30, text="Beltran - Ochoa", sizeText=15)
 
@@ -76,3 +81,6 @@ class InitView():
 
         self.__imgBird = pygame.image.load('./imgs/bird_sprite.png').convert_alpha()
         self.__imgBird = pygame.transform.scale(self.__imgBird, (75, 50))
+
+        self.__imgBackground = pygame.image.load('./imgs/background.jpg')
+        self.__imgBackground = pygame.transform.scale(self.__imgBackground, (CENTER_WIDTH*2, CENTER_HEIGHT*2))

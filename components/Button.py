@@ -26,7 +26,8 @@ class Button():
         if self.isOver(pos):
             if pygame.mouse.get_pressed()[0] and not self.clicked:
                 self.clicked = True
-                self.onClickFunction()
+                if not self.onClickFunction is None:
+                    self.onClickFunction()
             if not pygame.mouse.get_pressed()[0]:
                 self.clicked = False
 
