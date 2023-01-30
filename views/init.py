@@ -1,6 +1,5 @@
 import pygame
 from components.Button import Button
-from views.credits import CreditsView
 
 class InitView():
     def __init__(self, screen):
@@ -56,7 +55,9 @@ class InitView():
 
     # Button's functions
     def __btnJugar_Click(self):
-        return None
+        with open("config.txt", 'w') as f:
+            f.write('2')
+        f.close()
 
     def __btnCreditos_Click(self):
         with open("config.txt", 'w') as f:

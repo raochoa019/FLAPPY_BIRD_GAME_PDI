@@ -1,5 +1,4 @@
-import sys, time, random, pygame
-from collections import deque
+import sys, random, pygame
 import cv2 as cv, mediapipe as mp
 from components.Text import Text
 mp_drawing = mp.solutions.drawing_utils

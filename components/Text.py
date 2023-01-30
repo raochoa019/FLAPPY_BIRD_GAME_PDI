@@ -13,3 +13,6 @@ class Text():
             font = pygame.font.Font('./resources/ARCADE_N.ttf', self.sizeText)
             text = font.render(self.text, 1, self.color)
             screen.blit(text, (self.x - text.get_width()/2, self.y - text.get_height()/2))
+
+    def changeText(self, newText):
+        self.text = newText

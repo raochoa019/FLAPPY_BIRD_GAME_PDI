@@ -3,6 +3,7 @@ import cv2 as cv
 import sys
 from views.init import InitView
 from views.credits import CreditsView
+from views.game import GameView
 
 state = 0
 
@@ -13,12 +14,12 @@ pygame.display.set_caption('Flappy Bird: Proyecto DPI - Beltrán, Ochoa')
 # Ajusta el tamaño de la pantalla de Juego
 VID_CAP = cv.VideoCapture(0)
 window_size = (VID_CAP.get(cv.CAP_PROP_FRAME_WIDTH), VID_CAP.get(cv.CAP_PROP_FRAME_HEIGHT))
-print(window_size)
 screen = pygame.display.set_mode(window_size)
 
 game_is_running = True
 initView = InitView(screen)
 creditsView = CreditsView(screen)
+gameView = GameView(screen, VID_CAP, window_size)
 
 while True:
     # Check if game is running
@@ -50,12 +51,13 @@ while True:
 
     state = int(x)
     if state == 0:
-        initView.show()
+        initView.show()     # Vista Inicial
     elif state == 1:
-        creditsView.show()
+        creditsView.show()  # Vista Créditos
     elif state == 2:
-        pass # game.show()
+        gameView.show()     # Vista Juego
     else:
-        pass # game.show()
+        gameView.show()     # Vista GameOver
+        game_is_running = False
 
     pygame.display.update()
