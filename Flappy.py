@@ -12,27 +12,33 @@ VID_CAP = cv.VideoCapture(0)
 window_size = (VID_CAP.get(cv.CAP_PROP_FRAME_WIDTH), VID_CAP.get(cv.CAP_PROP_FRAME_HEIGHT)) # width by height
 screen = pygame.display.set_mode(window_size)
 
-# Bird and pipe init
+def pipe_random_height():
+    pipe_h = [random.randint(100, (screen.get_height()/2) - 20),random.randint( (screen.get_height()/2)+20, screen.get_height())]
+    return pipe_h    
+
+# Bird and pipe
 bird_img = pygame.image.load("bird_sprite.png")
 bird_img = pygame.transform.scale(bird_img, (bird_img.get_width() / 6, bird_img.get_height() / 6))
 bird_frame = bird_img.get_rect()
 bird_frame.center = (window_size[0] // 6, window_size[1] // 2)
-pipe_frames = deque()
+
 pipe_img = pygame.image.load("pipe_sprite_single.png")
+pipe_img = pygame.transform.rotate(pipe_img, 180)
+pipe_img_rotate = pygame.transform.rotate(pipe_img, 180)
 
-pipe_starting_template = pipe_img.get_rect()
-space_between_pipes = 250
+pipe_img_rotate = pygame.transform.scale(pipe_img_rotate, (50, screen.get_height()))
+pipe_bottom = pipe_img_rotate.get_rect()
+pipe_bottom.x = 500
+pipe_bottom.y = screen.get_height()/2 + 50 
 
-# Game loop
-game_clock = time.time()
-stage = 1
-pipeSpawnTimer = 0
-time_between_pipe_spawn = 40
-dist_between_pipes = 500
-pipe_velocity = lambda: dist_between_pipes / time_between_pipe_spawn
-level = 0
-score = 0
-idUpdateScore = False
+pipe_img = pygame.transform.scale(pipe_img, (50,screen.get_height()))
+pipe_top = pipe_img.get_rect()
+pipe_top.x = 500
+pipe_top.y = pipe_bottom.y - pipe_bottom.height - 100    
+
+speed = 5
+score = 1
+
 game_is_running = True
 
 with mp_face_mesh.FaceMesh(
@@ -88,62 +94,30 @@ with mp_face_mesh.FaceMesh(
         # Mirror frame, swap axes because opencv != pygame
         frame = cv.flip(frame, 1).swapaxes(0, 1)
 
-        # Update pipe positions
-        for pf in pipe_frames:
-            pf[0].x -= pipe_velocity()
-            pf[1].x -= pipe_velocity()
-
-        if len(pipe_frames) > 0 and pipe_frames[0][0].right < 0:
-            pipe_frames.popleft()
-
         # Update screen
         pygame.display.set_caption('Flappy Bird: Proyecto PDI - Beltrán, Ochoa')
         pygame.surfarray.blit_array(screen, frame)
+
+        #Movimiento Pipes
+        pipe_top.x -= speed
+        pipe_bottom.x -= speed
+
+        #Insercio de objetos
         screen.blit(bird_img, bird_frame) #Colocar Bird en la ventana
-        checker = True
-        for pf in pipe_frames:
-            # Check if bird went through to update score
-            if pf[0].left <= bird_frame.x <= pf[0].right:
-                checker = False
-                if not didUpdateScore:
-                    score += 1
-                    didUpdateScore = True
-            # Update screen
-            screen.blit(pipe_img, pf[1])
-            screen.blit(pygame.transform.flip(pipe_img, 0, 1), pf[0])
-        if checker: didUpdateScore = False
-
-        # Stage, score text
-        text = pygame.font.SysFont("Helvetica Bold.ttf", 50).render(f'Stage {stage}', True, (99, 245, 255))
-        tr = text.get_rect()
-        tr.center = (100, 50)
-        #screen.blit(text, tr) //Mostrar Escena
-        text = pygame.font.SysFont("Helvetica Bold.ttf", 50).render(f'Score: {score}', True, (99, 245, 255))
-        tr = text.get_rect()
-        tr.center = (100, 100)
-        #screen.blit(text, tr) //Mostrar Puntaje
-
-        # Update screen
-        pygame.display.flip()
-
-        # Check if bird is touching a pipe
-        if any([bird_frame.colliderect(pf[0]) or bird_frame.colliderect(pf[1]) for pf in pipe_frames]):
+        screen.blit(pipe_img, pipe_top) #Colocar Bird en la ventana        
+        screen.blit(pipe_img_rotate, pipe_bottom) #Colocar Bird en la ventana
+        
+        if pipe_top.x == 10:
+            pipe_bottom.x = 500
+            pipe_top.x = 500
+            score += 1
+            h_b = random.randint(100, screen.get_height() - 50)
+            pipe_bottom.y = h_b 
+            ht = h_b - pipe_bottom.height - 100
+            pipe_top.y = ht
+        
+        if(bird_frame.colliderect(pipe_top) or bird_frame.colliderect(pipe_bottom)):
             game_is_running = False
 
-        # Time to add new pipes
-        #if pipeSpawnTimer == 0:
-        #    top = pipe_starting_template.copy()
-        #    top.x, top.y = window_size[0], random.randint(120 - 1000, window_size[1] - 120 - space_between_pipes - 1000)
-        #    bottom = pipe_starting_template.copy()
-        #    bottom.x, bottom.y = window_size[0], top.y + 1000 + space_between_pipes
-        #    pipe_frames.append([top, bottom])
 
-        # Update pipe spawn timer - make it cyclical
-        pipeSpawnTimer += 1
-        if pipeSpawnTimer >= time_between_pipe_spawn: pipeSpawnTimer = 0
-
-        # Update stage
-        if time.time() - game_clock >= 10:
-            time_between_pipe_spawn *= 5 / 6
-            stage += 1
-            game_clock = time.time()
+        pygame.display.flip()
