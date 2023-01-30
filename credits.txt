@@ -1,0 +1,12 @@
+https://www.youtube.com/watch?v=2iyx8_elcYg
+https://stackoverflow.com/questions/61539576/how-do-i-change-a-part-of-the-display-when-i-click-a-button-made-on-pygame
+https://pythonprogramming.altervista.org/buttons-in-pygame/
+https://stackoverflow.com/questions/64408359/how-to-slow-down-animation
+https://stackoverflow.com/questions/28005641/how-to-add-a-background-image-into-pygame
+https://stackoverflow.com/questions/46390231/how-can-i-create-a-text-input-box-with-pygame
+https://www.geeksforgeeks.org/how-to-use-multiple-screens-on-pygame/
+https://www.pygame.org/docs/ref/display.html
+https://stackoverflow.com/questions/47034604/how-do-i-delete-displayed-objects-in-python-with-pygame
+https://stackoverflow.com/questions/21516543/how-to-remove-draw-objects-from-pygame-window
+https://stackoverflow.com/questions/2988211/how-can-i-read-a-single-character-at-a-time-from-a-file-in-python
+https://www.pythontutorial.net/python-basics/python-write-text-file/

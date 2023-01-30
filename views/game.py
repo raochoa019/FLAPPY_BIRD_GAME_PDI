@@ -12,10 +12,11 @@ class GameView():
         self.screen = screen
         self.VID_CAP = video
         self.window_size = window_size
-        self.speed = 5
+        self.speed = 4
         self.score = 0
         self.previous_score = -1
         self.__needUpdateVelocity = False
+        self.__timer = 0
 
         # Components
         self.__bird_img = None
@@ -47,10 +48,13 @@ class GameView():
             state = int(x)
             if state == 4: # Game Over
                 CENTER_WIDTH, CENTER_HEIGHT = self.screen.get_rect().center
-                txtGameOver = Text((99, 245, 255), CENTER_WIDTH, CENTER_HEIGHT, text="Game Over", sizeText=64)
+                txtGameOver = Text((99, 245, 255), CENTER_WIDTH, CENTER_HEIGHT-50, text="Game Over", sizeText=50)
                 txtGameOver.draw(self.screen)
+
+                txtScore = Text((99, 245, 255), CENTER_WIDTH, CENTER_HEIGHT+50, text="Puntaje: " + str(self.score), sizeText=50)
+                txtScore.draw(self.screen)
                 pygame.display.update()
-                pygame.time.wait(3000)
+                pygame.time.wait(5000)
             else:
                 # Get frame
                 ret, frame = self.VID_CAP.read()
@@ -83,15 +87,7 @@ class GameView():
                 self.__pipe_top.x -= self.speed
                 self.__pipe_bottom.x -= self.speed
 
-                # if (self.score % 3 == 0) and self.__needUpdateVelocity:
-                #     print("Actualiza velocidad")
-                #     self.__needUpdateVelocity = False
-                #     self.speed += 2
-                # 
-                # if self.previous_score % 3 == 0:
-                #     self.__needUpdateVelocity = True
-
-                if self.__pipe_top.x == 10:
+                if self.__pipe_top.x <= -40:
                     self.__pipe_bottom.x = self.window_size[0]
                     self.__pipe_top.x = self.window_size[0]
                     self.score += 1
@@ -106,6 +102,14 @@ class GameView():
                     with open("config.txt", 'w') as f:
                         f.write('4')
                     f.close()
+
+                self.__updateVelocity()
+
+    def __updateVelocity(self):
+        if self.__timer == 20:
+            self.speed += 0.05
+        else:
+            self.__timer += 1
 
     def __placeComponents(self):
         # Insercion de objetos

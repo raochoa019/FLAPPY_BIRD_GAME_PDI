@@ -23,7 +23,6 @@ class InitView():
 
     def show(self):
         self.draw()
-        #pygame.display.update()
 
     def draw(self):
         # Fill the background with cian
