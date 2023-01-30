@@ -1,11 +1,13 @@
 import sys, random, pygame
 import cv2 as cv, mediapipe as mp
 from components.Text import Text
+from pygame import mixer
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_face_mesh = mp.solutions.face_mesh
 drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
+
 
 class GameView():
     def __init__(self, screen, video, window_size):
@@ -54,7 +56,7 @@ class GameView():
                 txtScore = Text((99, 245, 255), CENTER_WIDTH, CENTER_HEIGHT+50, text="Puntaje: " + str(self.score), sizeText=50)
                 txtScore.draw(self.screen)
                 pygame.display.update()
-                pygame.time.wait(5000)
+                pygame.time.wait(4000)
             else:
                 # Get frame
                 ret, frame = self.VID_CAP.read()

@@ -4,12 +4,17 @@ import sys
 from views.init import InitView
 from views.credits import CreditsView
 from views.game import GameView
+from pygame import mixer
 
 state = 0
 
 # Inicializa componentes de Pygame
 pygame.init()
 pygame.display.set_caption('Flappy Bird: Proyecto DPI - Beltrán, Ochoa')
+
+mixer.init()
+mixer.music.load("./resources/back_music.mp3")
+mixer.music.play()
 
 # Ajusta el tamaño de la pantalla de Juego
 VID_CAP = cv.VideoCapture(0)
@@ -35,6 +40,7 @@ while True:
     # Check if user quit window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            mixer.music.stop()
             game_is_running = False
             VID_CAP.release()
             cv.destroyAllWindows()
